@@ -1,0 +1,8 @@
+#!/bin/bash
+
+PHYSICS_IMAGENAME="physics";
+
+exit(){ echo "!!!! --> $1" && exit 1;  }
+
+docker build -t $PHYSICS_IMAGENAME .;
+
