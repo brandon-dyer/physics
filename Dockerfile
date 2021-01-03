@@ -1,15 +1,12 @@
-##Dockerfile
-
+##setup
 from ubuntu:20.04 
+run mkdir /physics/scripts -p
 
-run mkdir /physics
+##base install
+copy source/scripts/install /physics/scripts/install
+run /physics/scripts/install
 
-copy source/scripts/install /physics/install
-
-run /physics/install
-
+##user entrypoint + dev copy of source
 copy source /physics
-
-run export PYTHONPATH=/physics/library && \
-    python3 /physics/examples/example.py
+entrypoint /physics/scripts/entrypoint
 

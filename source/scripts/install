@@ -1,6 +1,54 @@
 #!/bin/bash
 
-apt-get update -y;
+##entrypoint
+main() {
+    ##base setup
+    info "image setup";
+    aptUpdate;
+    for dependency in "${baseDependencies[@]}"; do
+        aptInstall "$dependency";
+    done;
+    ##extra setup
+    for dependency in "${extraDependencies[@]}"; do
+        aptInstall "$dependency";
+    done;
+}
 
-apt-get install python3 -y;
+##common
+fail() { echo "!!! $1" && exit 1; }
+cmd() { echo "-- $1"; }
+info() { echo "@@@@@ $1"; }
+verify() { 
+    if [[ "$1" -ne "0" ]]; then
+        fail "$2";
+    fi;
+}
+aptUpdate() {
+    cmd "apt-get update";
+    result=$(apt-get update -y 2>&1);
+    verify $? "$result";
+}
+aptInstall() {
+    cmd "apt-get install '$1'";
+    result=$(apt-get install $1 -y 2>&1);
+    verify $? "$result";
+}
+
+##base image dependencies
+baseDependencies=( \
+    "software-properties-common" \
+    "python3" \
+    "cmake" \
+    "git" \
+    "python3-dev" \
+    "gcc" \
+    "g++" \
+);
+
+##extra layers on top of base
+extraDependencies=( \
+    "python3-tk" ##tkinter \
+);
+
+main;
 

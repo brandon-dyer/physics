@@ -1,0 +1,5 @@
+#!/bin/bash
+
+export PYTHONPATH=/physics/library;
+python3 /physics/examples/airHockey.py;
+

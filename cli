@@ -2,7 +2,13 @@
 
 PHYSICS_IMAGENAME="physics";
 
-exit(){ echo "!!!! --> $1" && exit 1;  }
+fail(){ echo "!!!! --> $1" && exit 1;  }
 
-docker build -t $PHYSICS_IMAGENAME .;
+if [[ "$1" == "build" ]]; then
+    docker build -t $PHYSICS_IMAGENAME .;
+elif [[ "$1" == "run" ]]; then
+    docker run -it -e DISPLAY=$DISPLAY -v /tmp.X11-unix:/tmp/.X11-unix:rw $PHYSICS_IMAGENAME;
+else 
+    fail "Unknown cli action requested '$1'";
+fi;
 
